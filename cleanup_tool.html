@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SwissGov Surface Cleanup</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Instrument+Serif:ital@0;1&display=swap');
+
+  :root {
+    --bg: #f5f2eb;
+    --surface: #faf8f4;
+    --border: #d4cfc4;
+    --accent: #2d5a3d;
+    --accent-light: #e8f0ea;
+    --danger: #8b2e2e;
+    --danger-light: #f5e8e8;
+    --text: #1a1a18;
+    --muted: #6b6860;
+    --en: #1a3a5c;
+    --de: #3d1a00;
+    --fr: #1a003d;
+    --it: #003d1a;
+    --en-bg: #e8f0f8;
+    --de-bg: #f8f0e8;
+    --fr-bg: #f0e8f8;
+    --it-bg: #e8f8f0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--bg);
+    color: var(--text);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  header {
+    padding: 12px 24px;
+    background: var(--text);
+    color: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+
+  header h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 1.2rem;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+  }
+
+  .meta {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-size: 0.7rem;
+    color: #aaa;
+  }
+
+  .score-badge {
+    background: var(--accent);
+    color: white;
+    padding: 3px 10px;
+    border-radius: 2px;
+    font-size: 0.7rem;
+  }
+
+  .progress-bar {
+    height: 3px;
+    background: #333;
+    flex-shrink: 0;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.3s ease;
+  }
+
+  .toolbar {
+    padding: 8px 24px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+
+  .page-id {
+    font-size: 0.7rem;
+    color: var(--muted);
+    flex: 1;
+    font-style: italic;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .nav-group {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  button {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    padding: 5px 14px;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.15s;
+  }
+
+  button:hover { background: var(--accent-light); border-color: var(--accent); color: var(--accent); }
+  button:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  button.primary {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+  button.primary:hover { background: #1e3d2a; }
+
+  button.danger {
+    background: var(--danger-light);
+    color: var(--danger);
+    border-color: var(--danger);
+  }
+  button.danger:hover { background: var(--danger); color: white; }
+
+  .counter {
+    font-size: 0.72rem;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  .editors {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 0;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  .editor-pane {
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .editor-pane:last-child { border-right: none; }
+
+  .lang-header {
+    padding: 8px 12px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    border-bottom: 2px solid;
+  }
+
+  .lang-header.en { background: var(--en-bg); color: var(--en); border-color: var(--en); }
+  .lang-header.de { background: var(--de-bg); color: var(--de); border-color: var(--de); }
+  .lang-header.fr { background: var(--fr-bg); color: var(--fr); border-color: var(--fr); }
+  .lang-header.it { background: var(--it-bg); color: var(--it); border-color: var(--it); }
+
+  .lang-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+  .en .lang-dot { background: var(--en); }
+  .de .lang-dot { background: var(--de); }
+  .fr .lang-dot { background: var(--fr); }
+  .it .lang-dot { background: var(--it); }
+
+  textarea {
+    flex: 1;
+    width: 100%;
+    border: none;
+    outline: none;
+    resize: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    line-height: 1.65;
+    padding: 14px;
+    background: var(--surface);
+    color: var(--text);
+    overflow-y: auto;
+  }
+
+  textarea:focus { background: #fff; }
+
+  .char-count {
+    font-size: 0.6rem;
+    color: var(--muted);
+    margin-left: auto;
+  }
+
+  .bottom-bar {
+    padding: 8px 24px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+
+  .status {
+    font-size: 0.68rem;
+    color: var(--muted);
+  }
+
+  .status.saved { color: var(--accent); }
+  .status.unsaved { color: #b8860b; }
+
+  /* Upload overlay */
+  .overlay {
+    position: fixed; inset: 0;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    z-index: 100;
+  }
+
+  .overlay h2 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 2rem;
+    font-weight: 400;
+    color: var(--text);
+  }
+
+  .overlay p { font-size: 0.75rem; color: var(--muted); text-align: center; line-height: 1.6; }
+
+  .drop-zone {
+    border: 2px dashed var(--border);
+    border-radius: 4px;
+    padding: 48px 64px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: var(--surface);
+  }
+
+  .drop-zone:hover, .drop-zone.dragover {
+    border-color: var(--accent);
+    background: var(--accent-light);
+  }
+
+  .drop-zone input { display: none; }
+
+  .drop-zone-text { font-size: 0.8rem; color: var(--muted); margin-top: 8px; }
+  .drop-zone-icon { font-size: 2.5rem; margin-bottom: 8px; }
+
+  .jump-group {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  input[type=number] {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    padding: 5px 8px;
+    border-radius: 2px;
+    width: 70px;
+    outline: none;
+  }
+  input[type=number]:focus { border-color: var(--accent); }
+</style>
+</head>
+<body>
+
+<!-- Upload overlay -->
+<div class="overlay" id="overlay">
+  <h2>SwissGov Cleanup Tool</h2>
+  <p>Load your JSON file to begin surface-level cleaning.<br>The file should contain the quadruple structure with text_en, text_de, text_fr, text_it fields.</p>
+  <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+    <div class="drop-zone-icon">📂</div>
+    <div><strong>Drop JSON file here</strong></div>
+    <div class="drop-zone-text">or click to browse</div>
+    <input type="file" id="fileInput" accept=".json">
+  </div>
+</div>
+
+<header>
+  <h1>SwissGov Surface Cleanup</h1>
+  <div class="meta">
+    <span id="headerCounter">—</span>
+    <span class="score-badge" id="headerScore">score: —</span>
+  </div>
+</header>
+
+<div class="progress-bar">
+  <div class="progress-fill" id="progressFill" style="width:0%"></div>
+</div>
+
+<div class="toolbar">
+  <span class="page-id" id="pageId">—</span>
+  <div class="jump-group">
+    <input type="number" id="jumpInput" min="1" placeholder="go to #">
+    <button onclick="jumpTo()">Go</button>
+  </div>
+  <div class="nav-group">
+    <button onclick="navigate(-1)" id="prevBtn" disabled>← Prev</button>
+    <span class="counter" id="counter">0 / 0</span>
+    <button onclick="navigate(1)" id="nextBtn" disabled>Next →</button>
+  </div>
+  <button class="danger" onclick="markSkip()">Skip / Flag</button>
+  <button class="primary" onclick="saveAndNext()">Save &amp; Next →</button>
+</div>
+
+<div class="editors">
+  <div class="editor-pane">
+    <div class="lang-header en"><span class="lang-dot"></span>English <span class="char-count" id="count-en"></span></div>
+    <textarea id="text-en" spellcheck="false" oninput="updateCount('en')"></textarea>
+  </div>
+  <div class="editor-pane">
+    <div class="lang-header de"><span class="lang-dot"></span>Deutsch <span class="char-count" id="count-de"></span></div>
+    <textarea id="text-de" spellcheck="false" oninput="updateCount('de')"></textarea>
+  </div>
+  <div class="editor-pane">
+    <div class="lang-header fr"><span class="lang-dot"></span>Français <span class="char-count" id="count-fr"></span></div>
+    <textarea id="text-fr" spellcheck="false" oninput="updateCount('fr')"></textarea>
+  </div>
+  <div class="editor-pane">
+    <div class="lang-header it"><span class="lang-dot"></span>Italiano <span class="char-count" id="count-it"></span></div>
+    <textarea id="text-it" spellcheck="false" oninput="updateCount('it')"></textarea>
+  </div>
+</div>
+
+<div class="bottom-bar">
+  <span class="status" id="statusMsg">No file loaded.</span>
+  <div style="display:flex;gap:8px;">
+    <button onclick="downloadJSON()">⬇ Export cleaned JSON</button>
+    <button onclick="downloadSkipped()">⬇ Export flagged</button>
+  </div>
+</div>
+
+<script>
+let data = [];
+let cleaned = [];
+let skipped = [];
+let current = 0;
+let modified = false;
+
+// File loading
+const fileInput = document.getElementById('fileInput');
+const dropZone = document.getElementById('dropZone');
+
+fileInput.addEventListener('change', e => loadFile(e.target.files[0]));
+
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropZone.classList.remove('dragover');
+  loadFile(e.dataTransfer.files[0]);
+});
+
+function loadFile(file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const parsed = JSON.parse(e.target.result);
+      // Accept array or records-style object
+      data = Array.isArray(parsed) ? parsed : Object.values(parsed);
+      // Sort by diff_score descending so most different come first — or ascending for cleanest first
+      // We'll go ascending (cleanest first) as default
+      data.sort((a, b) => (a.diff_score_across_langs ?? 0) - (b.diff_score_across_langs ?? 0));
+      cleaned = new Array(data.length).fill(null);
+      skipped = [];
+      current = 0;
+      document.getElementById('overlay').style.display = 'none';
+      render();
+      setStatus('File loaded: ' + file.name + ' — ' + data.length + ' samples', 'saved');
+    } catch(err) {
+      alert('Failed to parse JSON: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+}
+
+function render() {
+  if (!data.length) return;
+  const row = data[current];
+  document.getElementById('text-en').value = cleaned[current]?.text_en ?? row.text_en ?? '';
+  document.getElementById('text-de').value = cleaned[current]?.text_de ?? row.text_de ?? '';
+  document.getElementById('text-fr').value = cleaned[current]?.text_fr ?? row.text_fr ?? '';
+  document.getElementById('text-it').value = cleaned[current]?.text_it ?? row.text_it ?? '';
+  ['en','de','fr','it'].forEach(l => updateCount(l));
+
+  const score = row.diff_score_across_langs != null ? row.diff_score_across_langs.toFixed(4) : '—';
+  document.getElementById('pageId').textContent = row.page_en ?? '—';
+  document.getElementById('headerScore').textContent = 'score: ' + score;
+  document.getElementById('headerCounter').textContent = (current + 1) + ' / ' + data.length;
+  document.getElementById('counter').textContent = (current + 1) + ' / ' + data.length;
+  document.getElementById('progressFill').style.width = ((current + 1) / data.length * 100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === data.length - 1;
+
+  const isFlagged = skipped.includes(current);
+  const isSaved = cleaned[current] !== null;
+  if (isFlagged) setStatus('⚑ Flagged for review', 'unsaved');
+  else if (isSaved) setStatus('✓ Saved', 'saved');
+  else setStatus('Unsaved changes', '');
+  modified = false;
+}
+
+function collectCurrent() {
+  const row = data[current];
+  return {
+    ...row,
+    text_en: document.getElementById('text-en').value,
+    text_de: document.getElementById('text-de').value,
+    text_fr: document.getElementById('text-fr').value,
+    text_it: document.getElementById('text-it').value,
+  };
+}
+
+function saveAndNext() {
+  cleaned[current] = collectCurrent();
+  setStatus('✓ Saved', 'saved');
+  if (current < data.length - 1) {
+    current++;
+    render();
+  }
+}
+
+function markSkip() {
+  if (!skipped.includes(current)) skipped.push(current);
+  cleaned[current] = collectCurrent(); // save text state too
+  setStatus('⚑ Flagged for review', 'unsaved');
+  if (current < data.length - 1) { current++; render(); }
+}
+
+function navigate(dir) {
+  // Auto-save on navigate if modified
+  const newIdx = current + dir;
+  if (newIdx < 0 || newIdx >= data.length) return;
+  current = newIdx;
+  render();
+}
+
+function jumpTo() {
+  const val = parseInt(document.getElementById('jumpInput').value);
+  if (!isNaN(val) && val >= 1 && val <= data.length) {
+    current = val - 1;
+    render();
+  }
+}
+
+function updateCount(lang) {
+  const ta = document.getElementById('text-' + lang);
+  const words = ta.value.trim() ? ta.value.trim().split(/\s+/).length : 0;
+  document.getElementById('count-' + lang).textContent = words + ' tokens';
+}
+
+function setStatus(msg, cls) {
+  const el = document.getElementById('statusMsg');
+  el.textContent = msg;
+  el.className = 'status ' + (cls || '');
+}
+
+function downloadJSON() {
+  const out = data.map((row, i) => cleaned[i] !== null ? cleaned[i] : row);
+  const skippedSet = new Set(skipped);
+  const clean = out.filter((_, i) => !skippedSet.has(i));
+  triggerDownload(clean, 'swissgov_cleaned.json');
+}
+
+function downloadSkipped() {
+  const flagged = skipped.map(i => cleaned[i] !== null ? cleaned[i] : data[i]);
+  triggerDownload(flagged, 'swissgov_flagged.json');
+}
+
+function triggerDownload(obj, filename) {
+  const blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+}
+
+// Keyboard shortcuts
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') return;
+  if (e.key === 'ArrowRight') navigate(1);
+  if (e.key === 'ArrowLeft') navigate(-1);
+  if (e.key === 'Enter') saveAndNext();
+  if (e.key === 'f' || e.key === 'F') markSkip();
+});
+</script>
+</body>
+</html>
