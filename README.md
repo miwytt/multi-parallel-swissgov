@@ -27,18 +27,19 @@ The resulting score distribution:
 
 ### 2. Filtering by Difference Score
 
-Document-quadruples are ranked by their difference score and filtered based on a threshold determined by manual inspection. Candidate thresholds were identified from the score distribution above: the steep elbow region (~0.4–0.5), a mid-range region (~0.1–0.2), the near-zero tail (~0.0), as well as the top outliers (~1.0). Documents sampled from just below each candidate threshold were inspected manually to calibrate what score levels correspond to in terms of actual crosslingual correspondence resulting in the following observations:
+Document-quadruples are ranked by their difference score and filtered based on a threshold determined by manual inspection. Documents were manually inspected from lowest difference score in ascending order to determine the threshold after which the documents are considered semantically and structurally too different to be included as strictly multi-parallel document quadruples. Obseravations from documents below the threshold reveal the following:
 
+TODO: adjust descriptions
 * ~0.0: effectively equivalent texts
 * ~0.1–0.2: small phrasing differences, minor explicitations
-* ~0.4–0.5: (the elbow region): a mix of meaningful omissions and heavy reformulations
-* \>1.0 (the top outliers): almost certainly major structural divergences, whole paragraphs missing or completely rewritten
+* ~-0.5: a mix of meaningful omissions and heavy reformulations
+* >0.5: almost certainly major structural divergences, whole paragraphs missing or completely rewritten
 
-Based on these observations we split the dataset according to two cutoff points into the following three multiparallel datasets:
-
-* (filename) <0.2: small phrasing differences, minor explicitations
-* (filename) <0.5: (the elbow region): a mix of meaningful omissions and heavy reformulations, including the same small phrasing differences, minor explicitations as above
-* (filename) full dataset: almost certainly major structural divergences, whole paragraphs missing or completely rewritten, including the same mix of meaningful omissions and heavy reformulations as well as the small phrasing differences and minor explicitations as above
+### 2. Benchmarking Machine Translation Systems
+TODO
+- TranslateGemma
+- Tower
+- Shy
 
 ## Citation
 
@@ -54,4 +55,5 @@ If you use this dataset, please cite the original SwissGov-RSD paper:
       url={https://arxiv.org/abs/2512.07538}, 
 }
 ```
+
 
