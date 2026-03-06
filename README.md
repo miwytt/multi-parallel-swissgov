@@ -37,9 +37,10 @@ TODO: adjust descriptions
 
 ### 2. Benchmarking Machine Translation Systems
 TODO
-- TranslateGemma
+- apertus v1
 - Tower
 - Shy
+- translategemma
 
 ## Citation
 
