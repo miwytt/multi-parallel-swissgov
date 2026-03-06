@@ -1,4 +1,4 @@
-# SwissGov-Multiparallel
+# SwissGov for document-level translation evaluation
 
 This repository contains a subset of the SwissGov-RSD dataset ([Wastl et al., 2025](https://www.arxiv.org/abs/2512.07538)) optimized for translation (evaluation) purposes in a multiparallel way between English, French, German, and Italian. 
 
@@ -54,3 +54,4 @@ If you use this dataset, please cite the original SwissGov-RSD paper:
       url={https://arxiv.org/abs/2512.07538}, 
 }
 ```
+
