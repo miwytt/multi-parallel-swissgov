@@ -33,7 +33,7 @@ TODO: adjust descriptions
 * ~0.0: effectively equivalent texts
 * ~0.1–0.2: small phrasing differences, minor explicitations
 * ~-0.5: a mix of meaningful omissions and heavy reformulations
-* >0.5: almost certainly major structural divergences, whole paragraphs missing or completely rewritten
+* \>0.5: almost certainly major structural divergences, whole paragraphs missing or completely rewritten
 
 ### 2. Benchmarking Machine Translation Systems
 TODO
@@ -55,5 +55,6 @@ If you use this dataset, please cite the original SwissGov-RSD paper:
       url={https://arxiv.org/abs/2512.07538}, 
 }
 ```
+
 
 
