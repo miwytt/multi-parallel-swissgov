@@ -40,7 +40,7 @@ Document quadruples are ranked by their difference score and filtered based on a
 * \>0.506: + almost certainly major structural divergences, with whole paragraphs missing or completely rewritten
 
 
-### 2. Benchmarking Machine Translation Systems
+## Benchmarking Machine Translation Systems
 TODO
 - apertus v1
 - tower
@@ -61,6 +61,7 @@ If you use this dataset, please cite the original SwissGov-RSD paper:
       url={https://arxiv.org/abs/2512.07538}, 
 }
 ```
+
 
 
 
