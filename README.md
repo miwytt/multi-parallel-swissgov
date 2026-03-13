@@ -41,7 +41,7 @@ Document quadruples are ranked by their difference score and filtered based on a
 
 To facilitate comparison and editability of a sample across all languages the `cleanup_tool.html`has been created with the help of Claude:
 
-
+![Screenshot](screenshot.png)
 
 ## Benchmarking Machine Translation Systems
 TODO
@@ -64,4 +64,5 @@ If you use this dataset, please cite the original SwissGov-RSD paper:
       url={https://arxiv.org/abs/2512.07538}, 
 }
 ```
+
 
