@@ -52,7 +52,7 @@ TODO
 
 ## Citation
 
-If you use this dataset, please cite the original SwissGov-RSD paper:
+If you use this repo or dataset, please cite the original SwissGov-RSD paper:
 ```bibtex
 @misc{wastl2025swissgovrsdhumanannotatedcrosslingualbenchmark,
       title={SwissGov-RSD: A Human-annotated, Cross-lingual Benchmark for Token-level Recognition of Semantic Differences Between Related Documents}, 
