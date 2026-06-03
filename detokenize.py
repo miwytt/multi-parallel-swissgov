@@ -20,6 +20,15 @@ def detokenize_field(text, detokenizer):
     text = re.sub(r"(\w)' (\w)", r"\1'\2", text)
     # French typography inserts a space before : ; ! ? — remove as tokenization artifact
     text = re.sub(r" ([;:!?])", r"\1", text)
+    # Moses detaches / and - from surrounding tokens
+    # e.g. "2010 / 2011" → "2010/2011", "e - mobility" → "e-mobility"
+    # Run in a loop because re.sub consumes the left \w, so chained cases like
+    # "vis - à - vis" need multiple passes to fully collapse.
+    for pattern, repl in [(r"(\w) / (\w)", r"\1/\2"), (r"(\w) - (\w)", r"\1-\2"), (r"(\w) – (\w)", r"\1–\2")]:
+        prev = None
+        while prev != text:
+            prev = text
+            text = re.sub(pattern, repl, text)
     return text
 
 with open("swissgov_cleaned.json") as f:
