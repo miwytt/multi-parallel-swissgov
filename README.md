@@ -39,8 +39,11 @@ Document quadruples are ranked by their difference score and filtered based on a
 * ~0.268–0.506: + pronounced reformulations, restructuring, and explicitations
 * \>0.506: + almost certainly major structural divergences, with whole paragraphs missing or completely rewritten
 
+To facilitate comparison and editability of a sample across all languages the `cleanup_tool.html`has been created with the help of Claude:
 
-### 2. Benchmarking Machine Translation Systems
+![Screenshot](screenshot.png)
+
+## Benchmarking Machine Translation Systems
 TODO
 - apertus v1
 - tower
@@ -49,7 +52,7 @@ TODO
 
 ## Citation
 
-If you use this dataset, please cite the original SwissGov-RSD paper:
+If you use this repo or dataset, please cite the original SwissGov-RSD paper:
 ```bibtex
 @misc{wastl2025swissgovrsdhumanannotatedcrosslingualbenchmark,
       title={SwissGov-RSD: A Human-annotated, Cross-lingual Benchmark for Token-level Recognition of Semantic Differences Between Related Documents}, 
@@ -61,6 +64,5 @@ If you use this dataset, please cite the original SwissGov-RSD paper:
       url={https://arxiv.org/abs/2512.07538}, 
 }
 ```
-
 
 
