@@ -18,6 +18,8 @@ def detokenize_field(text, detokenizer):
     # e.g. "l 'effettuazione" → "l'effettuazione", "l' auto" → "l'auto", "70 '000" → "70'000"
     text = re.sub(r"(\w) '(\w)", r"\1'\2", text)
     text = re.sub(r"(\w)' (\w)", r"\1'\2", text)
+    # French typography inserts a space before : ; ! ? — remove as tokenization artifact
+    text = re.sub(r" ([;:!?])", r"\1", text)
     return text
 
 with open("swissgov_cleaned.json") as f:
