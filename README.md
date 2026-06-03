@@ -2,7 +2,7 @@
 
 This repository contains a subset of the SwissGov-RSD dataset ([Wastl et al., 2025](https://www.arxiv.org/abs/2512.07538)) optimized for document-level translation evaluation in a multi-parallel setting between English, French, German, and Italian.
 
-* `swissgov_cleaned.json` contains the final multi-parallel documents, suitable for immediate use. These documents have been manually inspected for alignment quality. Sections that introduce semantic differences have been removed. Paragraph breaks have been re-inserted.
+* `swissgov_cleaned_detokenized.json` contains the final multi-parallel documents, suitable for immediate use. These documents have been manually inspected for alignment quality. Sections that introduce semantic differences have been removed. Paragraph breaks have been re-inserted.
 * `swissgov_sorted_by_diff_score.json` contains the unfiltered and unprocessed SwissGov documents sorted by difference score.
 * `cleanup_tool.html` allows one to drag-and-drop a JSON file such as `swissgov_sorted_by_diff_score.json` to open a document in all language versions simultaneously and edit them as desired.
 
